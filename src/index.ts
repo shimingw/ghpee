@@ -2,23 +2,31 @@ function longestCommonStart(strArr: string[]): string {
   if (strArr.length < 2) {
     throw Error();
   }
-  let commonStr: string = strArr[0].substring(0, 1);
+  let commonStr = "";
+  let isEndLoop = false;
   // 获取最短字符串长度
-  let shortestStr = strArr[0].length;
+  let shortestStrLen = strArr[0].length;
   for (let i = 1; i < strArr.length; i++) {
-    if (strArr[i].length < shortestStr) {
-      shortestStr = strArr[i].length;
+    if (strArr[i].length < shortestStrLen) {
+      shortestStrLen = strArr[i].length;
     }
   }
 
-  for (let i = 1; i < shortestStr; i++) {
-    for (let j = 1; j < strArr.length; j++) {
+  for (let i = 1; i <= shortestStrLen; i++) {
+    if (isEndLoop) {
+      break;
+    }
+    for (let j = 0; j < strArr.length; j++) {
       const Zero2IStr = strArr[j].substring(0, i);
-      if (commonStr !== Zero2IStr) {
-        break;
-      }
-      if (i > 1) {
+      // 如果是字符串数组的第一个值，则更新commonStr
+      if (j === 0) {
         commonStr = Zero2IStr;
+      }
+      if (commonStr !== Zero2IStr) {
+        isEndLoop = true;
+        // 如果跳出循环需要把最后加上的字符串去除
+        commonStr = commonStr.substring(0, commonStr.length - 1);
+        break;
       }
     }
   }
@@ -37,3 +45,4 @@ console.info(longestCommonStart(["abc", "xyz"]), "");
 
 console.info(longestCommonStart(["hello", "hell", "world"]), "");
 // 返回：''
+console.info(longestCommonStart(["qwe11", "qwe11qwe", "qwe11qweqwe"]), "qwe11");
